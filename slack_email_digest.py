@@ -60,7 +60,11 @@ for channel in channels:
         if not m['type'] == 'message':
             continue
 
-        sender = users[m['user']]
+        user = m.get('user')
+        if not user:
+            user = m['comment']['user']
+        sender = users.get(user, '')
+
         date = datetime.datetime.utcfromtimestamp(float(m['ts'])).strftime('%Y-%m-%d %H:%M:%S UTC')
         # Replace users id mentions with real names
         text = re.sub(r'<@(\w+)>', lambda m: '@' + users[m.group(1)], m['text'])
